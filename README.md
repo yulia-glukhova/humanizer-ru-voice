@@ -26,7 +26,7 @@ Fork of [blader/humanizer](https://github.com/blader/humanizer). Adds:
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone https://github.com/YOUR_USERNAME/humanizer-ru-voice.git ~/.claude/skills/humanizer-ru-voice
+git clone https://github.com/yulia-glukhova/humanizer-ru-voice.git ~/.claude/skills/humanizer-ru-voice
 ```
 
 ### Claude.ai (as a custom skill)
