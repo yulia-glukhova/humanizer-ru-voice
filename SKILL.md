@@ -1,5 +1,5 @@
 ---
-name: yulia-humanizer
+name: humanizer-ru-voice
 version: 1.0.0
 description: >
   Removes AI writing patterns and calibrates text to match the author's voice.
@@ -10,7 +10,7 @@ description: >
 allowed-tools: read_file
 ---
 
-# Yulia Humanizer
+# humanizer-ru-voice
 
 A writing editor that removes AI tells and calibrates output to the author's voice.
 Based on [blader/humanizer](https://github.com/blader/humanizer) with additions for:
