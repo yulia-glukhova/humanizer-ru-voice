@@ -1,84 +1,72 @@
 # humanizer-ru-voice
 
-AI writing pattern remover with Russian language support and voice corpus calibration.
+Removes AI writing patterns and calibrates text to match the author's voice. Supports Russian and English.
 
-Fork of [blader/humanizer](https://github.com/blader/humanizer). Adds:
+Based on [blader/humanizer v2.2.0](https://github.com/blader/humanizer) (Wikipedia "Signs of AI writing") with additions for Russian-language AI patterns, format-specific rules (Telegram, carousels, Reels, client reports), and voice corpus calibration.
 
-- **Russian AI patterns** — канцелярит, вводные конструкции, троица прилагательных, "в современном мире...", AI-превосходные степени
-- **Voice corpus calibration** — load your own texts into `CORPUS.md` so the skill matches *your* voice, not just removes AI tells
-- **Format-specific rules** — Telegram posts, carousel captions, Reels scripts, client reports
-- **Voice drift detection** — separate check that edited text still sounds like you, not like a clean but voiceless rewrite
+## Two versions
 
-## How it works
+This skill works in two different Claude environments. They have **identical content** but different `allowed-tools` in the YAML frontmatter because the platforms use different tool names.
 
-| Step | What happens |
-|------|-------------|
-| 0 | Loads `CORPUS.md` and extracts your voice fingerprint (rhythm, tone, habits) |
-| 1 | Detects content format (Telegram / carousel / Reels / report) |
-| 2 | Scans for AI patterns — RU and EN — and rewrites affected passages |
-| 3 | Checks for voice drift against your corpus |
-| 4 | Runs format-specific final checks |
-| 5 | Final anti-AI audit: catches what pattern-matching missed |
+| | Claude AI (claude.ai) | Claude Code (CLI) |
+|---|---|---|
+| **Folder** | `claude-ai/` | `claude-code/` |
+| **Tools** | `read_file` | `Read, Write, Edit, Grep, Glob, AskUserQuestion` |
+| **Install method** | Upload as custom skill in claude.ai Settings | Add to `.claude/skills/` in your project |
 
 ## Installation
 
-### Claude Code
+### Claude AI (claude.ai / web & app)
+
+1. On Web Version Go to **Settings > Profile > Custom skills** 
+2. On Desctop Version Go to **Customize > Skills > Add skill**
+2. Click **Add skill**
+3. Copy the contents of `claude-ai/SKILL.md` into the skill editor
+4. (Optional) Also upload `CORPUS.md` with examples of your writing style
+
+### Claude Code (CLI)
+
+1. In your project, create the skill directory:
 
 ```bash
-mkdir -p ~/.claude/skills
-git clone https://github.com/yulia-glukhova/humanizer-ru-voice.git ~/.claude/skills/humanizer-ru-voice
+mkdir -p .claude/skills/humanizer-ru-voice
 ```
 
-### Claude.ai (as a custom skill)
-
-1. Download `SKILL.md` and `CORPUS.example.md`
-2. Go to **Settings → Skills → + → Upload**
-3. Upload both files
-
-### Set up your voice corpus
+2. Copy the skill file:
 
 ```bash
-cd ~/.claude/skills/humanizer-ru-voice
-cp CORPUS.example.md CORPUS.md
+cp claude-code/SKILL.md .claude/skills/humanizer-ru-voice/SKILL.md
 ```
 
-Open `CORPUS.md` and paste 5–10 of your best texts: Telegram posts, report excerpts, carousel scripts. The more varied the examples, the better the calibration.
+3. (Optional) Add your voice corpus:
 
-**Do not commit `CORPUS.md` to a public repo** — it contains your original texts. It's already in `.gitignore`.
-
-## Usage
-
-In Claude Code:
-
-```
-/humanizer-ru-voice [paste your text]
+```bash
+cp CORPUS.md .claude/skills/humanizer-ru-voice/CORPUS.md
 ```
 
-Or just ask Claude to edit your text — the skill triggers automatically when loaded.
+4. The skill will be automatically picked up by Claude Code on next run.
 
-## What's different from the original
+## Voice corpus (CORPUS.md)
 
-| Feature | blader/humanizer | this fork |
-|---------|-----------------|-----------|
-| EN AI patterns | ✅ 24 patterns | ✅ same |
-| RU AI patterns | ❌ | ✅ 5 categories |
-| Voice corpus | ❌ | ✅ CORPUS.md fingerprinting |
-| Voice drift check | ❌ | ✅ separate step |
-| Format rules | ❌ | ✅ Telegram, carousels, Reels, reports |
-| Corpus priority over examples | ❌ | ✅ inline examples don't override your voice |
+Both versions support an optional `CORPUS.md` file placed in the same directory as `SKILL.md`. This file should contain 5-10 examples of your real writing (blog posts, Telegram posts, client emails) so the humanizer can match your specific voice, not just remove AI patterns.
 
-## What this skill does NOT do
+Without a corpus, the skill removes AI tells and applies general good-writing principles. With a corpus, it additionally calibrates rhythm, tone, and structural habits to match your voice.
 
-- Does not fact-check claims
-- Does not change the author's conclusions or opinions
-- Does not add information that wasn't in the original
-- Does not enforce one "correct" style — it enforces *your* style from the corpus
+## What it covers
 
-## License
+**5 Russian-specific patterns (RU-1 through RU-5):**
+Канцелярит, AI-превосходные степени, обобщающие финалы, "мы живём в мире где...", троица прилагательных
 
-MIT — see [LICENSE](LICENSE).
+**24 English patterns (EN-1 through EN-24):**
+Significance inflation, notability emphasis, superficial -ing analyses, promotional language, vague attributions, "challenges and future prospects" sections, AI vocabulary, copula avoidance, negative parallelisms, rule of three, synonym cycling, false ranges, em dash overuse, boldface overuse, inline-header lists, Title Case, emojis in structure, curly quotes, chatbot residue, knowledge-cutoff disclaimers, sycophantic tone, filler phrases, excessive hedging, generic positive conclusions
 
-Based on [blader/humanizer](https://github.com/blader/humanizer) by Siqi Chen, licensed under MIT.
+**Plus:** personality/soul injection, format-specific checks (Telegram/carousel/Reels/client report), two-pass anti-AI audit, voice drift detection.
+
+## Credits
+
+- EN patterns: [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) via [blader/humanizer](https://github.com/blader/humanizer)
+- RU patterns, format rules, voice corpus system: original work
+
 
 ---
 
